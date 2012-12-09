@@ -40,6 +40,7 @@ end
 
 desc "Destroy VPC"
 task :destroy_vpc => :check_credentials do
+  Dir[connect_script_name('*')].each { |script| File.delete script }
   @aws.destroy_vpc
 end
 
