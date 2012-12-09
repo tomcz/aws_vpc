@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# use /dev/null as known_hosts to stop ephemeral EC2 signatures from filling up the normal known_hosts file
+SSH_OPTS="-i <%= keyfile %> -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+SSH_HOST="<%= user %>@<%= host %>"
+
+if [ "$1" == "put" ]; then
+  scp ${SSH_OPTS} $2 ${SSH_HOST}:$3
+elif [ "$1" == "get" ]; then
+  scp ${SSH_OPTS} ${SSH_HOST}:$2 $3
+else
+  ssh ${SSH_OPTS} ${SSH_HOST}
+fi

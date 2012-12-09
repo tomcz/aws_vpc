@@ -1,0 +1,24 @@
+---
+name: midkemia
+region: us-east-1
+cidr_block: 10.0.0.0/16
+# key_bucket_region: optional
+key_bucket: midkemia-74e98102320c
+defaults:
+  # http://cloud-images.ubuntu.com/releases/precise/release/
+  image_id: ami-9a873ff3
+  instance_type: m1.small
+  image_login_user: ubuntu
+subnets:
+  - name: triagia
+    primary: true
+    ssh_hosts: 10.0.1.*
+    cidr_block: 10.0.1.0/24
+    availability_zone: us-east-1b
+    bastion_host: crydee
+  - name: novindus
+    primary: false
+    ssh_hosts: 10.0.2.*
+    cidr_block: 10.0.2.0/24
+    availability_zone: us-east-1c
+    bastion_host: maharta
