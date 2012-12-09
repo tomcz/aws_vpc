@@ -13,4 +13,4 @@ Requirements
 License
 -------
 
-These scripts are covered by the [MIT License](http://www.opensource.org/licenses/mit-license.
+These scripts are covered by the [MIT License](http://www.opensource.org/licenses/mit-license).
