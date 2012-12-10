@@ -139,11 +139,12 @@ class AWSDriver
 
   def ssh_key_object(object_name)
     s3 = connect_to_s3
-    bucket = s3.buckets[@config.key_bucket]
+    bucket_name = "#{@config.key_bucket_prefix}-#{s3.config.access_key_id}"
+    bucket = s3.buckets[bucket_name]
     unless bucket.exists?
       region = @config.key_bucket_region || 'us-standard'
-      puts "Creating [#{@config.key_bucket}] S3 bucket in [#{region}]"
-      bucket = s3.buckets.create @config.key_bucket, location_constraint: @config.key_bucket_region
+      puts "Creating [#{bucket_name}] S3 bucket in [#{region}]"
+      bucket = s3.buckets.create bucket_name, location_constraint: @config.key_bucket_region
     end
     bucket.objects[object_name]
   end

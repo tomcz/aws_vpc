@@ -3,7 +3,7 @@ name: midkemia
 region: us-east-1
 cidr_block: 10.0.0.0/16
 # key_bucket_region: optional
-key_bucket: midkemia-74e98102320c
+key_bucket_prefix: midkemia
 defaults:
   # http://cloud-images.ubuntu.com/releases/precise/release/
   image_id: ami-9a873ff3
