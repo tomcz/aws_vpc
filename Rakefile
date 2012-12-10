@@ -30,11 +30,15 @@ task :check_credentials do
 end
 
 desc "Setup VPC"
-task :setup_vpc => :check_credentials do
+task :setup_vpc => [:check_credentials, OUTPUT] do
   bastion_hosts = @aws.create_vpc
-  bastion_hosts.each do |host|
-    SSHDriver.wait_for_ssh_connection host.public_ip
-    write_connect_script host
+  bastion_hosts.each do |instance|
+    SSHDriver.start(instance.public_ip, instance.user, instance.keyfile) do |ssh|
+      provision_instance(ssh, bastion_host_config(instance))
+    end
+  end
+  bastion_hosts.each do |instance|
+    write_connect_script instance
   end
 end
 
@@ -42,6 +46,44 @@ desc "Destroy VPC"
 task :destroy_vpc => :check_credentials do
   Dir[connect_script_name('*')].each { |script| File.delete script }
   @aws.destroy_vpc
+end
+
+def bastion_host_config(instance)
+  update_config_file('chef/nodes/bastion.json') do |config|
+    config['bastion'] = {
+        'user' => instance.user,
+        'ssh_hosts' => instance.hosts,
+    }
+  end
+end
+
+def update_config_file(config_file)
+  config = open(config_file) { |fp| JSON.parse fp.read }
+  yield config
+  output = File.join(OUTPUT, File.basename(config_file))
+  open(output, 'w') { |fp| fp.puts JSON.pretty_generate(config) }
+  output
+end
+
+def provision_instance(ssh, config_file)
+  install_chef_solo ssh
+  config_file_name = File.basename(config_file)
+  ssh.upload config_file, "chef/#{config_file_name}"
+  ssh.exec! "sudo chef-solo -c ~/chef/solo.rb -j ~/chef/#{config_file_name}"
+end
+
+def install_chef_solo(ssh)
+  ssh.exec! 'sudo apt-get -y update'
+  ssh.exec! 'sudo apt-get -y upgrade'
+  unless ssh.exec('chef-solo --version').success
+    ssh.exec! 'curl -L http://www.opscode.com/chef/install.sh | sudo bash'
+  end
+  tarball_file = File.join(OUTPUT, TARBALL_NAME)
+  sh "tar czf #{tarball_file} chef"
+  ssh.exec 'rm -rf chef*'
+  ssh.exec "mkdir /tmp/chef-solo"
+  ssh.upload tarball_file, TARBALL_NAME
+  ssh.exec! "tar xzf #{TARBALL_NAME}"
 end
 
 def write_connect_script(instance)

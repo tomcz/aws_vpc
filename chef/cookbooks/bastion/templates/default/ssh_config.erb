@@ -1,0 +1,5 @@
+<% node[:bastion][:ssh_hosts].each do |host| %>
+Host <%= host %>
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+<% end %>
