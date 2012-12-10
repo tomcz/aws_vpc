@@ -29,9 +29,9 @@ task :check_credentials do
   end
 end
 
-desc "Setup VPC"
-task :setup_vpc => [:check_credentials, OUTPUT] do
-  bastion_hosts = @aws.create_vpc
+desc "Make VPC"
+task :make_vpc => [:check_credentials, OUTPUT] do
+  bastion_hosts = @aws.make_vpc
   bastion_hosts.each do |instance|
     SSHDriver.start(instance.public_ip, instance.user, instance.keyfile) do |ssh|
       provision_instance(ssh, bastion_host_config(instance))
@@ -42,10 +42,10 @@ task :setup_vpc => [:check_credentials, OUTPUT] do
   end
 end
 
-desc "Destroy VPC"
-task :destroy_vpc => :check_credentials do
+desc "Delete VPC"
+task :delete_vpc => :check_credentials do
   Dir[connect_script_name('*')].each { |script| File.delete script }
-  @aws.destroy_vpc
+  @aws.delete_vpc
 end
 
 def bastion_host_config(instance)

@@ -16,7 +16,7 @@ class AWSDriver
     @config = Hashie::Mash.new(YAML.load_file(config_file))
   end
 
-  def create_vpc
+  def make_vpc
     ec2 = connect_to_ec2
     vpc = get_or_create_vpc ec2
     internet_gateway = ensure_internet_gateway_attached ec2, vpc
@@ -271,7 +271,7 @@ class AWSDriver
     sleep 1 while item.status != status
   end
 
-  def destroy_vpc
+  def delete_vpc
     ec2 = connect_to_ec2
     vpc = find_vpc ec2
     if vpc
