@@ -289,6 +289,7 @@ class AWSDriver
       end
       elastic_ips.each do |elastic_ip|
         puts "Deleting [#{elastic_ip.public_ip}] elastic ip"
+        elastic_ip.disassociate if elastic_ip.associated?
         elastic_ip.delete
       end
       security_groups = []
