@@ -139,7 +139,7 @@ class AWSDriver
 
   def ssh_key_object(object_name)
     s3 = connect_to_s3
-    bucket_name = "#{@config.key_bucket_prefix}-#{s3.config.access_key_id}"
+    bucket_name = "#{@config.key_bucket_prefix}-#{s3.config.access_key_id.downcase}"
     bucket = s3.buckets[bucket_name]
     unless bucket.exists?
       region = @config.key_bucket_region || 'us-standard'
