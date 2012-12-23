@@ -2,5 +2,6 @@
 connect_*
 build/
 .idea
+*.swp
 .key
 .aws
