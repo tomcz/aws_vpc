@@ -23,8 +23,8 @@ task :check_credentials do
   puts "Using configuration from #{vpc_conf}".cyan
   @aws = AWSDriver.new(ROOT, vpc_conf)
   unless @aws.credentials?
-    access_key_id = ask('Access Key ID? ')
-    secret_access_key = ask('Secret Access Key? ')
+    access_key_id = ask('AWS Access Key ID? ')
+    secret_access_key = ask('AWS Secret Access Key? ')
     @aws.save_credentials access_key_id.to_s, secret_access_key.to_s
   end
 end
