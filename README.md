@@ -12,10 +12,10 @@ Requirements
 Usage
 -----
 
-    ./go clean        # Remove any temporary products.
-    ./go clobber      # Remove any generated file.
-    ./go destroy_vpc  # Destroy VPC
-    ./go setup_vpc    # Setup VPC
+    ./go clean       # Remove any temporary products.
+    ./go clobber     # Remove any generated file.
+    ./go delete_vpc  # Delete VPC
+    ./go make_vpc    # Make VPC
 
 License
 -------
