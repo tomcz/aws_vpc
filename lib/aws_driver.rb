@@ -289,8 +289,13 @@ class AWSDriver
         wait_until_status instance, :terminated
       end
       elastic_ips.each do |elastic_ip|
+        if elastic_ip.associated?
+          "Disassociating [#{elastic_ip.public_ip}] elastic ip"
+          elastic_ip.disassociate
+        end
+      end
+      elastic_ips.each do |elastic_ip|
         puts "Deleting [#{elastic_ip.public_ip}] elastic ip"
-        elastic_ip.disassociate if elastic_ip.associated?
         elastic_ip.delete
       end
       security_groups = []
