@@ -8,8 +8,6 @@ class AWSDriver
 
   ANYWHERE = '0.0.0.0/0'
 
-  attr_reader :credentials, :ssh_key_file
-
   def initialize(config_dir, config_file)
     @credentials = File.join(config_dir, '.aws')
     @ssh_key_file = File.join(config_dir, '.key')
